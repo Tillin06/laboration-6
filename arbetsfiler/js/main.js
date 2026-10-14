@@ -14,8 +14,8 @@ const recipeContainer = document.querySelector("#recipe");
 
 //Hämta recept från API
 
-async function fetchRecipe(searchTerm) {
-    const url = `https://dummyjson.com/recipes/search?q=${searchTerm}`;
+async function fetchRecipe(searchInput) {
+    const url = `https://dummyjson.com/recipes/search?q=${searchInput}`;
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error("Något gick fel");
@@ -51,19 +51,19 @@ function displayRecipe(recipe) {
     const prepTime = document.createElement("p");
     const prepTimeLabel = document.createElement("strong");
     prepTimeLabel.textContent = "Förberedelsetid:";
-    prepTime.append(prepTimeLabel, document.createTextNode(recipe.prepTime));
+    prepTime.append(prepTimeLabel, document.createTextNode(recipe.prepTimeMinutes));
     //Tillagningstid
     const cookTime = document.createElement("p");
     const cookTimeLabel = document.createElement("strong");
     cookTimeLabel.textContent = "Tillagningstid:";
-    cookTime.append(cookTimeLabel, document.createTextNode(recipe.cookTime));
+    cookTime.append(cookTimeLabel, document.createTextNode(recipe.cookTimeMinutes));
     //Svårighetsgrad
     const difficulty = document.createElement("p");
     const difficultyLabel = document.createElement("strong");
     difficultyLabel.textContent = "Svårighetsgrad:";
     difficulty.append(difficultyLabel, document.createTextNode(recipe.difficulty));
     //Informationen läggs i receptinfo
-    recipeInfo.appendChild(servings, prepTime, cookTime, difficulty);
+    recipeInfo.append(servings, prepTime, cookTime, difficulty);
     article.appendChild(recipeInfo);
 
     //Rubrik för ingredienser
@@ -87,7 +87,7 @@ function displayRecipe(recipe) {
 
     //Numrerad list för instruktioner
     const instructionsList = document.createElement("ol");
-    recipe.instructionsList.forEach(function (instruction) {
+    recipe.instructions.forEach(function (instruction) {
         const item = document.createElement("li");
         item.textContent = instruction;
         instructionsList.appendChild(item);
@@ -113,7 +113,7 @@ async function handleSearch(event) {
     recipeContainer.innerHTML = "";
 //Hämta recept från API
 try {
-    const data = await fetchRecipe(searchInput);
+    const data = await fetchRecipe(searchInput.value.trim());
     //Kontrollera om några recept hittades
     if (data.recipes.length === 0) {
         messageEl.textContent = "Inga recept hittades";
@@ -124,9 +124,13 @@ try {
     displayRecipe(recipe);
     //Visa felmeddelande
     } catch (error) {
-    errorMessage.textContent = "Något gick fel, försök igen senare";
+        console.error ("Fel vid hämtning av recept:", error);
+        recipeContainer.replaceChildren();
+        messageEl.textContent = "Något gick fel, försök igen senare";
     }
 }
 
 //Eventlyssnare för formuläret
+searchForm.addEventListener("submit", handleSearch);
+
 
