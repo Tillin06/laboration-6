@@ -18,7 +18,7 @@ async function fetchRecipe(searchInput) {
     const url = `https://dummyjson.com/recipes/search?q=${searchInput}`;
     const response = await fetch(url);
     if (!response.ok) {
-        throw new Error("Något gick fel");
+        throw new Error("Something went wrong");
     }
     const data = await response.json();
     return data;
@@ -33,7 +33,7 @@ async function handleSearch(event) {
     messageEl.textContent = "";
     //Kontrollera så att sökfältet inte är tomt
     if (searchInput.value.trim() === "") {
-        errorMessage.textContent = "Skriv in ett sökord";
+        errorMessage.textContent = "The field cannot be empty";
         return;
     }
 //Rensa tidigare recept
@@ -46,7 +46,7 @@ try {
 
  //Kontrollera om några recept hittades
     if (data.recipes.length === 0) {
-        messageEl.textContent = "Inga recept hittades";
+        messageEl.textContent = "No recipes found";
         return;
     }
 //Hämta första receptet och visa
@@ -55,9 +55,9 @@ try {
 
 //Visa felmeddelande
     } catch (error) {
-        console.error ("Fel vid hämtning av recept:", error);
+        console.error ("Something went wrong while fetching recipes:", error);
         recipeContainer.replaceChildren();
-        messageEl.textContent = "Något gick fel, försök igen senare";
+        messageEl.textContent = "Something went wrong, try again later";
     }
 }
 
@@ -93,25 +93,25 @@ function displayRecipe(recipe) {
     //Antal portioner
     const servings = document.createElement("p");
     const servingsLabel = document.createElement("strong");
-    servingsLabel.textContent = "Antal portioner: ";
+    servingsLabel.textContent = "Amount of servings: ";
     servings.append(servingsLabel, document.createTextNode(recipe.servings));
 
     //Förberedelsetid
     const prepTime = document.createElement("p");
     const prepTimeLabel = document.createElement("strong");
-    prepTimeLabel.textContent = "Förberedelsetid:";
-    prepTime.append(prepTimeLabel, document.createTextNode(` ${recipe.prepTimeMinutes} minuter`));
+    prepTimeLabel.textContent = "Preparation time:";
+    prepTime.append(prepTimeLabel, document.createTextNode(` ${recipe.prepTimeMinutes} minutes`));
 
     //Tillagningstid
     const cookTime = document.createElement("p");
     const cookTimeLabel = document.createElement("strong");
-    cookTimeLabel.textContent = "Tillagningstid: ";
-    cookTime.append(cookTimeLabel, document.createTextNode(` ${recipe.cookTimeMinutes} minuter`));
+    cookTimeLabel.textContent = "Cooking time: ";
+    cookTime.append(cookTimeLabel, document.createTextNode(` ${recipe.cookTimeMinutes} minutes`));
 
     //Svårighetsgrad
     const difficulty = document.createElement("p");
     const difficultyLabel = document.createElement("strong");
-    difficultyLabel.textContent = "Svårighetsgrad: ";
+    difficultyLabel.textContent = "Difficulty: ";
     difficulty.append(difficultyLabel, document.createTextNode(recipe.difficulty));
 
     //Informationen läggs i receptinfo
@@ -120,7 +120,7 @@ function displayRecipe(recipe) {
 
     //Rubrik för ingredienser
     const ingredientsTitle = document.createElement("h4");
-    ingredientsTitle.textContent = "Ingredienser";
+    ingredientsTitle.textContent = "Ingredients";
     article.appendChild(ingredientsTitle);
 
     //Punktlista för ingredienser
@@ -134,7 +134,7 @@ function displayRecipe(recipe) {
 
     //Rubrik för instruktioner
     const instructionsTitle = document.createElement("h4");
-    instructionsTitle.textContent = "Instruktioner";
+    instructionsTitle.textContent = "Instructions";
     article.appendChild(instructionsTitle);
 
     //Numrerad list för instruktioner
